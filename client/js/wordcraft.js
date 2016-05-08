@@ -314,11 +314,12 @@ var main = function () {
                     // Name is good start the game.
                     if (result.hasOwnProperty("isUnique")) {
                         if (result.isUnique === true) {
+                            // Hide the modal
+                            $("#joinModal").modal("hide");
                             // Set the UI to display the game board
                             WC.Model.UI.navLink(1);
                             // Join the game
                             WC.Controller.initIO();
-                            $("#join-modal").modal("hide");
                             return false;
                         }
                     }

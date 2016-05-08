@@ -74,100 +74,104 @@
     </header>
 
     <main>
-      <div class="jumbotron" data-bind="if: UI.navLink() === 0">
-        <div class="container">
-          <p class="h1">WordCraft - Multiplayer Word Game</p>
+      <div data-bind="if: UI.navLink() === 0">
+        <div class="jumbotron" data-bind="if: UI.navLink() === 0">
+          <div class="container">
+            <p class="h1">WordCraft - Multiplayer Word Game</p>
+          </div>
         </div>
       </div>
-      <div class="container-fluid" data-bind="if: UI.navLink() === 1">
-        <div class="row">
-          <div class="col-sm-9 col-md-9 col-lg-7 col-lg-offset-1">
-            <div class="panel panel-info">
-              <div class="panel-heading">
-                <h2 class="pannel-title">Game Board
-                  <span class="text-center pull-right" data-bind="if: GameTimer.display">
-                    <span data-bind="with: GameTimer">
-                      <span data-bind="css: tenth"></span>
-                      <span data-bind="css: digit"></span>
-                    </span>
-                  </span>
-                </h2>
-              </div>
-              <div class="panel-body gameboard">
-                <div class="row">
-                  <div data-bind="if: GameLetters.display">
-                    <div class="letters text-center" data-bind="with: GameLetters">
-                      <!-- Place to put the server render letters here -->
-                      <span data-bind="foreach: letters">
-                        <span data-bind="css: letter"></span>
+      <div data-bind="if: UI.navLink() === 1">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-9 col-md-9 col-lg-7 col-lg-offset-1">
+              <div class="panel panel-info">
+                <div class="panel-heading">
+                  <h2 class="pannel-title">Game Board
+                    <span class="text-center pull-right" data-bind="if: GameTimer.display">
+                      <span data-bind="with: GameTimer">
+                        <span data-bind="css: tenth"></span>
+                        <span data-bind="css: digit"></span>
                       </span>
-                    </div>  <!-- End of letters DIV -->
+                    </span>
+                  </h2>
+                </div>
+                <div class="panel-body gameboard">
+                  <div class="row">
+                    <div data-bind="if: GameLetters.display">
+                      <div class="letters text-center" data-bind="with: GameLetters">
+                        <!-- Place to put the server render letters here -->
+                        <span data-bind="foreach: letters">
+                          <span data-bind="css: letter"></span>
+                        </span>
+                      </div>  <!-- End of letters DIV -->
+                    </div>
+                    <div data-bind="if: CountDown.display">
+                      <div class="timers text-center" data-bind="with: CountDown">
+                        <!-- Place to put the server render Timer here -->
+                        <!-- Below are example count down timer -->
+                        <h3> Get Ready !!! </h3>
+                        <span data-bind="css: tenth"></span>
+                        <span data-bind="css: digit"></span>
+                      </div> <!-- End of Timers DIV -->
+                    </div>
                   </div>
-                  <div data-bind="if: CountDown.display">
-                    <div class="timers text-center" data-bind="with: CountDown">
-                      <!-- Place to put the server render Timer here -->
-                      <!-- Below are example count down timer -->
-                      <h3> Get Ready !!! </h3>
-                      <span data-bind="css: tenth"></span>
-                      <span data-bind="css: digit"></span>
-                    </div> <!-- End of Timers DIV -->
+                </div>
+                <div class="panel-footer text-center" data-bind="if: GameTimer.display">
+                  <div data-bind="with: WordList">
+                    <!-- This is where the user can type in there input -->
+                    <input id="wordBox" class="form-control" data-bind="textInput: wordInput, event: {keypress: onKeyPress}" maxlength="10">
+                    <button data-bind="click: addWord">Submit</button>
+
+                    <!-- for testing purposes only -->
+                    <ul data-bind="foreach: words">
+                      <p data-bind="text: word"></p>
+                    </ul>
                   </div>
                 </div>
               </div>
-              <div class="panel-footer text-center" data-bind="if: GameTimer.display">
-                <div data-bind="with: WordList">
-                  <!-- This is where the user can type in there input -->
-                  <input id="wordBox" class="form-control" data-bind="textInput: wordInput, event: {keypress: onKeyPress}" maxlength="10">
-                  <button data-bind="click: addWord">Submit</button>
 
-                  <!-- for testing purposes only -->
-                  <ul data-bind="foreach: words">
-                    <p data-bind="text: word"></p>
-                  </ul>
+            </div> <!-- End Game board column -->
+
+            <!-- Right column to hold chat and player list-->
+            <div class="col-sm-3 col-md-3 col-lg-3">
+              <!-- Begin row to hold the game room -->
+              <div class="row">
+                <div class="panel panel-info" data-bind="with: GameRoom">
+                  <div class="panel-heading">
+                    <h4 class="pannel-title">Players</h4>
+                  </div>
+                  <div class="panel-body players-body">
+                    <!-- Player dynamically get added in here via Knockout Binding -->
+                    <ul id="playerList" data-bind="foreach: players">
+                      <li data-bind="text: name, attr: {userId: id}, css: {self: self}"></li>
+                    </ul>
+                  </div>
                 </div>
               </div>
-            </div>
-
-          </div> <!-- End Game board column -->
-
-          <!-- Right column to hold chat and player list-->
-          <div class="col-sm-3 col-md-3 col-lg-3">
-            <!-- Begin row to hold the game room -->
-            <div class="row">
-              <div class="panel panel-info" data-bind="with: GameRoom">
-                <div class="panel-heading">
-                  <h4 class="pannel-title">Players</h4>
-                </div>
-                <div class="panel-body players-body">
-                  <!-- Player dynamically get added in here via Knockout Binding -->
-                  <ul id="playerList" data-bind="foreach: players">
-                    <li data-bind="text: name, attr: {userId: id}, css: {self: self}"></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <!-- End row to hold the game room -->
-            <!-- Begin row to hold the chatroom -->
-            <div class="row">
-              <div class="panel panel-info" data-bind="with: ChatRoom">
-                <div class="panel-heading">
-                  <h4 class="pannel-title">Chat Room</h4>
-                </div>
-                <!-- KO dynamic bind for the chatroom -->
-                <div class="panel-body chatroom-body" data-bind="foreach: messages">
-                  <p data-bind="text: message, css: type"></p>
-                </div>
-                <div class="panel-footer">
-                  <input type="text" class="form-control" data-bind="textInput: msgInput, event: {keypress: onEnterKey }">
-                  <button class="btn" data-bind="click: send">Send</button>
-                  <button class="btn" data-bind="click: clear">Clear</button>
+              <!-- End row to hold the game room -->
+              <!-- Begin row to hold the chatroom -->
+              <div class="row">
+                <div class="panel panel-info" data-bind="with: ChatRoom">
+                  <div class="panel-heading">
+                    <h4 class="pannel-title">Chat Room</h4>
+                  </div>
+                  <!-- KO dynamic bind for the chatroom -->
+                  <div class="panel-body chatroom-body" data-bind="foreach: messages">
+                    <p data-bind="text: message, css: type"></p>
+                  </div>
+                  <div class="panel-footer">
+                    <input type="text" class="form-control" data-bind="textInput: msgInput, event: {keypress: onEnterKey }">
+                    <button class="btn" data-bind="click: send">Send</button>
+                    <button class="btn" data-bind="click: clear">Clear</button>
+                  </div>
                 </div>
               </div>
-            </div>
-            <!-- End row that contain chatroom -->
-          </div> <!-- Right column -->
-        </div> <!-- Grid Row -->
-      </div> <!-- Container -->
+              <!-- End row that contain chatroom -->
+            </div> <!-- Right column -->
+          </div> <!-- Grid Row -->
+        </div> <!-- Container -->
+      </div>
     </main>
 
     <section id="modal-anchors">
