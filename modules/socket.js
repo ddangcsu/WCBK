@@ -207,6 +207,7 @@ var handleGameResult = function () {
                 var payload = _.map(sortedPlayer, function (player) {
                     return {
                         name: player.name,
+                        avatar: player.avatar,
                         score: player.score,
                         wordList: player.wordList
                     };

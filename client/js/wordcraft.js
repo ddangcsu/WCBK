@@ -6,7 +6,7 @@ undef: true, unused: true, strict: true, trailing: true */
 var main = function () {
     "use strict";
 
-    // List of avatars
+    // List of avatars.  These are static CSS sprite class to display an avatar
     var avatars = [
         "wc-avatar wc-avatar-1",
         "wc-avatar wc-avatar-2",
