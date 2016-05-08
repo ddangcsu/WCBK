@@ -25,11 +25,6 @@ body {
     font-weight: bold;
     color: orange;
 }
-.gameroom-body {
-    min-height: 100px;
-    max-height: 200px;
-    overflow-y: scroll;
-}
 
 .chatroom-body {
     min-height: 400px;
@@ -53,16 +48,12 @@ body {
 }
 
 .gameboard-body {
-    min-height: 560px;
-    max-height: 600px;
-}
-
-.main-game {
-    min-height: 200px;
-    max-height: 200px;
+    min-height: 400px;
+    max-height: 400px;
 }
 
 .thumbnail {
     width: 100px;
+    text-align: center;
     display:inline-block;
 }
