@@ -273,7 +273,7 @@ var main = function () {
         name: ko.observable(),
         hasError: ko.observable(false),
         errorMsg: ko.observable(),
-        join: function() {
+        join: function () {
             var self = this;
             var url;
 
@@ -308,13 +308,22 @@ var main = function () {
                     }
                     // Name is not good, go back to it.
                     self.hasError(true);
-                    self.errorMsg(self.name() + " is not unique.  Choose a different name");
+                    self.errorMsg(self.name() + " is taken.  Choose a different name");
                     self.name("");
                     return true;
                 });
             }
             return false;
         },
+
+        onEnterKey: function (data, event) {
+            var self = this;
+            if (event.keyCode === 13) {
+                self.join();
+                return false;
+            }
+            return true;
+        }
     };
 
     // Define a model to control the navigation link.
