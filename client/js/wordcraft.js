@@ -359,6 +359,12 @@ var main = function () {
         }
     };
 
+    // Define a model to show the game result
+    WC.Model.GameScore = {
+        display: ko.observable(false),
+        scores: ko.observableArray([]),
+    };
+
     // Define a model to control the navigation link.
     // navLink = 0, will only show the jumbotron home page
     // navLink = 1 will show the game board
@@ -417,6 +423,9 @@ var main = function () {
     // Function to display the countdown timer received from the server
     // Data payload is: {"timer": number}
     WC.Controller.displayCountDown = function (data) {
+        // Clear the result
+        WC.Model.GameScore.display(false);
+
         if (data.timer > 0) {
             WC.Model.CountDown.display(true);
         } else {
@@ -490,9 +499,24 @@ var main = function () {
     WC.Controller.displayGameScores = function (payload) {
         // TODO: Code to display game scores from payload
         // Payload is an array of player objects in the form of:
-        // {name, score, wordListArray}
-        // Score are shorted with highest to lowest
+        // {name, avatar, score, wordList}
+        // Score are sorted with highest to lowest
         console.log("Server game result payload", payload);
+        // Clear the scores list and turn it on to dipslay
+        WC.Model.GameScore.scores([]);
+        WC.Model.GameScore.display(true);
+
+        var rank = 1;
+        _.each(payload, function (player) {
+            if (rank === 1) {
+                player.winner = true;
+                rank = 0;
+            } else {
+                player.winner = false;
+            }
+            WC.Model.GameScore.scores.push(player);
+        });
+
     };
 
     // Function to display message that game in progress and user need to join

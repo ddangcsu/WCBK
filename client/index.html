@@ -124,14 +124,36 @@
                         <span data-bind="css: digit"></span>
                       </div> <!-- End of Timers DIV -->
                     </div>
-                    <div class="text-center" data-bind="if: GameTimer.display">
-                      <h4> Remaining Time </h4>
-                      <span data-bind="with: GameTimer">
-                        <span data-bind="css: tenth"></span>
-                        <span data-bind="css: digit"></span>
-                      </span>
+                    <div data-bind="if: GameTimer.display">
+                      <div class="text-center">
+                        <h4> Remaining Time </h4>
+                        <span data-bind="with: GameTimer">
+                          <span data-bind="css: tenth"></span>
+                          <span data-bind="css: digit"></span>
+                        </span>
+                      </div>
                     </div>
-
+                    <div data-bind="if: GameScore.display">
+                      <div class="row" data-bind="with: GameScore">
+                        <div data-bind="foreach: scores">
+                          <div class="col-xs-4 col-md-2" >
+                            <div class="panel panel-default">
+                              <div class="panel-heading">
+                                <span data-bind="css: avatar"></span>
+                                <h4 class="panel-title pull-right" data-bind="text: name"></h4>
+                                <span data-bind="if: winner">Winner !!!</span>
+                              </div>
+                              <div class="panel-body">
+                                <p data-bind="text: score">Score: </p>
+                                <ul data-bind="foreach: wordList">
+                                  <li data-bind="text: $data"></li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div class="panel-footer text-center" data-bind="if: GameTimer.display">
