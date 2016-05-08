@@ -67,19 +67,19 @@ var main = function () {
             });
         }
     };
-    
+
     // Define a WordList Model that contains an array of observable Words for the player
     WC.Model.WordList = {
         // Track a list of valid words entered
         words: ko.observableArray(),
         // Current word to add
         wordInput: ko.observable(),
-        
+
         addWord: function () {
             var self = this;
             var wordInput = self.wordInput();
             if (wordInput !== "") {
-                
+
                 // Check validity and add to words list
                 $.get("dict/" + wordInput, function(result) {
                     console.log(result);
@@ -87,7 +87,7 @@ var main = function () {
                         self.words.push({ word: wordInput });
                     }
                 });
-                
+
                 // Clear the word input box
                 self.wordInput("");
             }
@@ -95,24 +95,31 @@ var main = function () {
         // Add word when enter key is pressed
         onKeyPress: function (data, event) {
             var self = this;
-            if(event.keyCode === WC.Model.GameLetters.letters()[0].eU.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[1].eU.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[2].eU.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[3].eU.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[4].eU.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[5].eU.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[6].eU.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[7].eU.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[0].eL.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[1].eL.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[2].eL.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[3].eL.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[4].eL.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[5].eL.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[6].eL.charCodeAt(0)
-            || event.keyCode === WC.Model.GameLetters.letters()[7].eL.charCodeAt(0)) {
+            // Convert the event keyCode to letter
+            var eventKey = String.fromCharCode(event.keyCode).toUpperCase();
+
+            // If eventKey is a letter in the rawLetters array return true
+            if ( WC.Model.GameLetters.rawLetters().indexOf(eventKey) !== -1 ) {
                 return true;
             }
+            // if(event.keyCode === WC.Model.GameLetters.letters()[0].eU.charCodeAt(0)
+            // || event.keyCode === WC.Model.GameLetters.letters()[1].eU.charCodeAt(0)
+            // || event.keyCode === WC.Model.GameLetters.letters()[2].eU.charCodeAt(0)
+            // || event.keyCode === WC.Model.GameLetters.letters()[3].eU.charCodeAt(0)
+            // || event.keyCode === WC.Model.GameLetters.letters()[4].eU.charCodeAt(0)
+            // || event.keyCode === WC.Model.GameLetters.letters()[5].eU.charCodeAt(0)
+            // || event.keyCode === WC.Model.GameLetters.letters()[6].eU.charCodeAt(0)
+            // || event.keyCode === WC.Model.GameLetters.letters()[7].eU.charCodeAt(0)
+            // || event.keyCode === WC.Model.GameLetters.letters()[0].eL.charCodeAt(0)
+            // || event.keyCode === WC.Model.GameLetters.letters()[1].eL.charCodeAt(0)
+            // || event.keyCode === WC.Model.GameLetters.letters()[2].eL.charCodeAt(0)
+            // || event.keyCode === WC.Model.GameLetters.letters()[3].eL.charCodeAt(0)
+            // || event.keyCode === WC.Model.GameLetters.letters()[4].eL.charCodeAt(0)
+            // || event.keyCode === WC.Model.GameLetters.letters()[5].eL.charCodeAt(0)
+            // || event.keyCode === WC.Model.GameLetters.letters()[6].eL.charCodeAt(0)
+            // || event.keyCode === WC.Model.GameLetters.letters()[7].eL.charCodeAt(0)) {
+            //     return true;
+            // }
             // If the enter key was pressed, addWord
             if (event.keyCode === 13) {
                 self.addWord();
@@ -126,6 +133,8 @@ var main = function () {
             while(self.words().length > 0) {
                 self.words().pop();
             }
+            // Add code to also clear out the wordInput
+            self.wordInput("");
         }
     };
 
@@ -272,9 +281,14 @@ var main = function () {
     // Define a model for the Game Timer
     WC.Model.GameLetters = {
         display: ko.observable(false),
+        rawLetters: ko.observableArray(),
         letters: ko.observableArray(),
     };
 
+    // Define a model for the game UI
+    WC.Model.UI = {
+        selectedButton: ko.observable(0),
+    };
     // Function to greet the server request to join
     WC.Controller.greetServer = function () {
         // Flip the flag to true
@@ -352,18 +366,22 @@ var main = function () {
     // Function to display the game letters received from the server
     // Data payload is: {"letters": array of letters}
     WC.Controller.displayGameLetters = function (data) {
+        // Ensure all letters are in upper case
+        var upper = _.map(data.letters, function (char) {
+            return char.toUpperCase();
+        });
+
         // Allow game letters to display
         WC.Model.GameLetters.display(true);
 
         // Clear the list of letters
         WC.Model.GameLetters.letters([]);
+        WC.Model.GameLetters.rawLetters(upper);
 
         // Format the letter into a CSS class for the Letter Sprite
-        _.each(data.letters, function (letter) {
+        _.each(upper, function (letter) {
             var letterObj = {
-                letter: "letter-lg wc-lg-" + letter.toUpperCase(),
-                eU: letter.toUpperCase(),
-                eL: letter.toLowerCase()
+                letter: "letter-lg wc-lg-" + letter,
             };
             WC.Model.GameLetters.letters.push(letterObj);
         });
