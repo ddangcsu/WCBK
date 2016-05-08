@@ -102,24 +102,7 @@ var main = function () {
             if ( WC.Model.GameLetters.rawLetters().indexOf(eventKey) !== -1 ) {
                 return true;
             }
-            // if(event.keyCode === WC.Model.GameLetters.letters()[0].eU.charCodeAt(0)
-            // || event.keyCode === WC.Model.GameLetters.letters()[1].eU.charCodeAt(0)
-            // || event.keyCode === WC.Model.GameLetters.letters()[2].eU.charCodeAt(0)
-            // || event.keyCode === WC.Model.GameLetters.letters()[3].eU.charCodeAt(0)
-            // || event.keyCode === WC.Model.GameLetters.letters()[4].eU.charCodeAt(0)
-            // || event.keyCode === WC.Model.GameLetters.letters()[5].eU.charCodeAt(0)
-            // || event.keyCode === WC.Model.GameLetters.letters()[6].eU.charCodeAt(0)
-            // || event.keyCode === WC.Model.GameLetters.letters()[7].eU.charCodeAt(0)
-            // || event.keyCode === WC.Model.GameLetters.letters()[0].eL.charCodeAt(0)
-            // || event.keyCode === WC.Model.GameLetters.letters()[1].eL.charCodeAt(0)
-            // || event.keyCode === WC.Model.GameLetters.letters()[2].eL.charCodeAt(0)
-            // || event.keyCode === WC.Model.GameLetters.letters()[3].eL.charCodeAt(0)
-            // || event.keyCode === WC.Model.GameLetters.letters()[4].eL.charCodeAt(0)
-            // || event.keyCode === WC.Model.GameLetters.letters()[5].eL.charCodeAt(0)
-            // || event.keyCode === WC.Model.GameLetters.letters()[6].eL.charCodeAt(0)
-            // || event.keyCode === WC.Model.GameLetters.letters()[7].eL.charCodeAt(0)) {
-            //     return true;
-            // }
+
             // If the enter key was pressed, addWord
             if (event.keyCode === 13) {
                 self.addWord();
@@ -472,7 +455,8 @@ var main = function () {
     // later
     WC.Controller.handleGameInProgress = function () {
         // TODO: Code to handle display message/dialog to user
-
+        $("#inProgressModal").modal("show");
+        return false;
     };
 
     // Function to initialize IO connection and setup
@@ -529,17 +513,18 @@ var main = function () {
     // Apply KnockOut binding
     ko.applyBindings(WC.Model);
 
-    // Initialize Socket IO Connection and events handling
-    //WC.Controller.initIO();
-
-
     var initialize = function () {
         // Set the navLink to home
         WC.Model.UI.navLink(0);
     };
 
+    // Initialize the application and set to display the jumbotron first
     initialize();
 
+    // Confirm leaving webapp (copied from project 1)
+    window.onbeforeunload = function() {
+       return "";
+    };
 
 };
 

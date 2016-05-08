@@ -175,7 +175,7 @@
     </main>
 
     <section id="modal-anchors">
-
+        <!-- Modal to show a dialog About the game -->
         <div id="aboutModal" class="modal fade" role="dialog">
           <div class="modal-dialog">
             <!-- Modal content-->
@@ -206,6 +206,7 @@
           </div> <!-- Modal Dialog -->
         </div> <!-- Modal class/role -->
 
+        <!-- Modal to show a dialog on the rules of the game -->
         <div id="rulesModal" class="modal fade" role="dialog">
           <div class="modal-dialog">
             <!-- Modal content-->
@@ -232,6 +233,7 @@
           </div> <!-- Modal Dialog -->
         </div> <!-- Modal class/role -->
 
+        <!-- Modal to show a dialog to solicit a player name and allow game join -->
         <div id="joinModal" class="modal fade" role="dialog">
           <div class="modal-dialog" data-bind="with: JoinPlayer">
             <!-- Modal content-->
@@ -258,6 +260,28 @@
                     Join Game
                   </button>
                 </div>
+              </div>
+            </div> <!-- Modal Content -->
+          </div> <!-- Modal Dialog -->
+        </div> <!-- Modal class/role -->
+
+        <!-- Modal to show game in progress -->
+        <div id="inProgressModal" class="modal fade" role="dialog">
+          <div class="modal-dialog" data-bind="with: JoinPlayer">
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header alert-warning">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Game in Progress</h4>
+              </div>
+              <div class="modal-body">
+                <p class="h4">
+                  We are sorry but the game is currently in progress.
+                  Please come back later.
+                </p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
               </div>
             </div> <!-- Modal Content -->
           </div> <!-- Modal Dialog -->
