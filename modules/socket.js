@@ -12,6 +12,7 @@ var rClient;
 
 var gameInProgress = "wc:inProgress";
 var gameReadyCheck = "wc:readyCheck";
+var gameSentResult = "wc.sentResult";
 
 // Private function to emit an ioEvent with a count down seconds
 var sendTimer = function (ioEvent, seconds) {
@@ -127,6 +128,51 @@ var handleGameStart = function () {
 
 };
 
+// Private function to send up the result
+var sendResult = function (ioEvent, payload) {
+    // We add a game status
+    rClient.renameAsync(gameInProgress, gameSentResult)
+    .then(function (renamed) {
+        if (renamed) {
+            console.log("Game Ready State Changed to sentResult: " + renamed);
+            io.emit(ioEvent, payload);
+            return Promise.resolve(true);
+        } else {
+            return Promise.resolve(false);
+        }
+    })
+    .then(function (status) {
+        // If we need to reset game state and reset players
+        if (status) {
+            // We clear a set of storage to set the game state
+            var clearInProgress = rClient.delAsync(gameInProgress);
+            var clearReadyCheck = rClient.delAsync(gameReadyCheck);
+            var clearSentResult = rClient.delAsync(gameSentResult);
+
+            var sqlUpdate = {
+                $set: {
+                    isReady: false,
+                    hasResult: false,
+                    wordList: []
+                }
+            };
+            var resetPlayerStats = mClient.Game.updateAsync({}, sqlUpdate, {multi: true});
+
+            Promise.all([clearInProgress, clearReadyCheck, clearSentResult, resetPlayerStats])
+            .then(function (result) {
+                console.log("Clear Game State after sending game score " + result);
+            })
+            .catch(function (err) {
+                console.log("Error encountered handle result: ", err);
+            });
+        }
+    })
+    .catch(function (err) {
+        console.log("Error sendResult: ", err);
+    });
+
+};
+
 // Private function to handle the game result
 var handleGameResult = function () {
     // We only need to check if the game is in Progress state.
@@ -156,7 +202,6 @@ var handleGameResult = function () {
                 // We map the playerList result to a payload
                 // We order the players with the highest score first
                 var sortedPlayer = _.orderBy(playerList, "score", "desc");
-
                 // Then we map it to payload so that we only pick out the fields
                 // we want
                 var payload = _.map(sortedPlayer, function (player) {
@@ -169,37 +214,8 @@ var handleGameResult = function () {
 
                 // Then we send up the payload to client
                 var ioEvent = "game result";
-                io.emit(ioEvent, payload);
-
-                // Then we clear the game state as well as reset player stats
-                return Promise.resolve(true);
+                sendResult(ioEvent, payload);
             }
-        }
-        return Promise.resolve(false);
-    })
-    .then(function (status) {
-        // If we need to reset game state and reset players
-        if (status) {
-            // We clear a set of storage to set the game state
-            var clearInProgress = rClient.delAsync(gameInProgress);
-            var clearReadyCheck = rClient.delAsync(gameReadyCheck);
-
-            var sqlUpdate = {
-                $set: {
-                    isReady: false,
-                    hasResult: false,
-                    wordList: []
-                }
-            };
-            var resetPlayerStats = mClient.Game.updateAsync({}, sqlUpdate, {multi: true});
-
-            Promise.all([clearInProgress, clearReadyCheck, resetPlayerStats])
-            .then(function (result) {
-                console.log("Clear Game State after sending game score " + result);
-            })
-            .catch(function (err) {
-                console.log("Error encountered handle result: ", err);
-            });
         }
     })
     .catch(function (err) {
@@ -212,9 +228,10 @@ var initializeGame = function () {
     // We clear a set of storage to set the game state
     var clearInProgress = rClient.delAsync(gameInProgress);
     var clearReadyCheck = rClient.delAsync(gameReadyCheck);
+    var clearSentResult = rClient.delAsync(gameSentResult);
     var clearGameTable = mClient.Game.removeAsync({});
 
-    Promise.all([clearInProgress, clearReadyCheck, clearGameTable])
+    Promise.all([clearInProgress, clearReadyCheck, clearSentResult, clearGameTable])
     .then(function (result) {
         console.log("Initialize to clear the game state " + result);
     })
