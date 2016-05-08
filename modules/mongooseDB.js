@@ -33,6 +33,7 @@ var PlayerSchema = mongoose.Schema({
 
 var GameSchema = mongoose.Schema({
     // The following stuff are updated per session that the player play
+    avatar: String,
     name: {
         type: String,
         unique: true,

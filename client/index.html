@@ -76,7 +76,7 @@
 
     <main>
       <div data-bind="if: UI.navLink() === 0">
-        <div class="jumbotron" data-bind="if: UI.navLink() === 0">
+        <div class="jumbotron">
           <div class="container">
             <p class="h1 text-center">WordCraft</p>
             <p class="h1 text-center">How fast can you craft the word?</p>
@@ -85,25 +85,27 @@
       </div>
       <div data-bind="if: UI.navLink() === 1">
         <div class="container-fluid">
+          <!-- Move the Players as a single row above the game board -->
           <div class="row" data-bind="with: GameRoom">
             <div class="col-sm-12 col-md-12 col-lg-12">
-              <div data-bind="foreach: players">
+              <div class="container-fluid" data-bind="foreach: players">
                 <div class="thumbnail">
-                  <span class="wc-avatar wc-avatar-1 text-center"></span>
-                  <div class="caption">
-                    <h5 data-bind="text: name, attr: {userId: id}, css: {self: self}"></h5>
-                  </div>
+                  <span data-bind="css: avatar"></span>
+                  <h5 data-bind="text: name, attr: {userId: id}, css: {self: self}"></h5>
                 </div>
               </div>
             </div>
           </div>
+          <!-- End Players list -->
+
+          <!-- Begin of the Game Board and the chat room -->
           <div class="row">
             <div class="col-sm-9 col-md-9 col-lg-9">
               <div class="panel panel-info">
                 <div class="panel-heading">
                   <h3 class="pannel-title">Game Board</h3>
                 </div>
-                <div class="panel-body gameboard">
+                <div class="panel-body gameboard-body">
                   <div class="row">
                     <div data-bind="if: GameLetters.display">
                       <div class="letters text-center" data-bind="with: GameLetters">
@@ -168,6 +170,7 @@
               <!-- End row that contain chatroom -->
             </div> <!-- Right column -->
           </div> <!-- Grid Row -->
+          <!-- End of the Game board and the chat room -->
         </div> <!-- Container -->
       </div>
     </main>
@@ -241,6 +244,15 @@
                 <h4 class="modal-title">Join Game</h4>
               </div>
               <div class="modal-body">
+                <div class="form-group">
+                  <label>Choose an avatar for your game</label>
+                  <div data-bind="foreach: avatars">
+                    <label class="radio-inline">
+                      <input type="radio" data-bind="attr: {value: $data}, checked: $parent.selectedAvatar">
+                      <span data-bind="css: $data"></span>
+                    </label>
+                  </div>
+                </div>
                 <div class="form-group">
                   <label for="inputName">Enter your game name:</label>
                   <input type="text" class="form-control" id="inputName" placeholder="Your Game Name"

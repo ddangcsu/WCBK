@@ -6,6 +6,36 @@ undef: true, unused: true, strict: true, trailing: true */
 var main = function () {
     "use strict";
 
+    // List of avatars
+    var avatars = [
+        "wc-avatar wc-avatar-1",
+        "wc-avatar wc-avatar-2",
+        "wc-avatar wc-avatar-3",
+        "wc-avatar wc-avatar-4",
+        "wc-avatar wc-avatar-5",
+        "wc-avatar wc-avatar-6",
+        "wc-avatar wc-avatar-7",
+        "wc-avatar wc-avatar-8",
+        "wc-avatar wc-avatar-9",
+        "wc-avatar wc-avatar-10",
+        "wc-avatar wc-avatar-11",
+        "wc-avatar wc-avatar-12",
+        "wc-avatar wc-avatar-13",
+        "wc-avatar wc-avatar-14",
+        "wc-avatar wc-avatar-15",
+        "wc-avatar wc-avatar-16",
+        "wc-avatar wc-avatar-17",
+        "wc-avatar wc-avatar-18",
+        "wc-avatar wc-avatar-19",
+        "wc-avatar wc-avatar-20",
+        "wc-avatar wc-avatar-21",
+        "wc-avatar wc-avatar-22",
+        "wc-avatar wc-avatar-23",
+        "wc-avatar wc-avatar-24",
+        "wc-avatar wc-avatar-25",
+        "wc-avatar wc-avatar-26",
+        "wc-avatar wc-avatar-27",
+    ];
     // WordCraft namespace
     var WC = {
         // Define the User Interface jQuery selector for each DOM section
@@ -31,6 +61,7 @@ var main = function () {
         // console.log("Client id:" + "/#" + client.id);
         // console.log("Player id:" + player.id);
         return {
+            avatar: player.avatar,
             name: player.name,
             id: player.id,
             self: ("/#" + client.id === player.id) ? true: false,
@@ -271,6 +302,8 @@ var main = function () {
     // Define a model to get a player to enter his/her game name
     WC.Model.JoinPlayer = {
         name: ko.observable(),
+        selectedAvatar: ko.observable(),
+        avatars: ko.observableArray(avatars),
         hasError: ko.observable(false),
         errorMsg: ko.observable(),
         join: function () {
@@ -341,17 +374,19 @@ var main = function () {
         console.dir(client);
         //client.name = "player" + Date.now();
         client.name = WC.Model.JoinPlayer.name();
+        client.avatar = WC.Model.JoinPlayer.selectedAvatar();
 
         // Greet the server to join the server
         var newPayload = {
             type: "greeting",
             from: client.name,
+            avatar: client.avatar,
             msg: "Hello"
         };
         client.emit("hello", newPayload);
 
         // Add self so that it show up as first player on the list
-        WC.Model.GameRoom.add({name: client.name, id: "/#" + client.id});
+        WC.Model.GameRoom.add({avatar: client.avatar, name: client.name, id: "/#" + client.id});
     };
 
     // Function to display the chat message (need to convert to KO)
@@ -465,7 +500,7 @@ var main = function () {
     WC.Controller.handleGameInProgress = function () {
         // TODO: Code to handle display message/dialog to user
         $("#inProgressModal").modal("show");
-        WC.Model.GameRoom.remove({name: client.name, id: "/#" + client.id});
+        WC.Model.GameRoom.remove({avatar: client.avatar, name: client.name, id: "/#" + client.id});
         return false;
     };
 
