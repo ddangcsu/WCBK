@@ -456,6 +456,7 @@ var main = function () {
     WC.Controller.handleGameInProgress = function () {
         // TODO: Code to handle display message/dialog to user
         $("#inProgressModal").modal("show");
+        WC.Model.GameRoom.remove({name: client.name, id: "/#" + client.id});
         return false;
     };
 
