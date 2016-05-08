@@ -285,17 +285,69 @@ var main = function () {
         letters: ko.observableArray(),
     };
 
-    // Define a model for the game UI
-    WC.Model.UI = {
-        selectedButton: ko.observable(0),
+    // Define a model to get a player to enter his/her game name
+    WC.Model.JoinPlayer = {
+        name: ko.observable(),
+        hasError: ko.observable(false),
+        errorMsg: ko.observable(),
+        join: function() {
+            var self = this;
+            var url;
+
+            if (!self.name()) { // Undefined or empty
+                self.hasError(true);
+                self.errorMsg("Name required");
+                console.log("Name required");
+                return true;
+            } else if (self.name() === "test") {
+                self.hasError(true);
+                self.errorMsg("Test is not a valid name");
+                self.name("");
+                return true;
+            } else {
+                url = "/checkName/" + self.name();
+                console.log("Game Name: " + self.name());
+
+                // Check if the name is a good unique name
+                $.get(url)
+                .done(function (result) {
+                    // Name is good start the game.
+                    if (result.hasOwnProperty("isUnique")) {
+                        if (result.isUnique === true) {
+                            // Set the UI to display the game board
+                            WC.Model.UI.navLink(1);
+                            // Join the game
+                            WC.Controller.initIO();
+                            $("#join-modal").modal("hide");
+                            return false;
+                        }
+                    }
+                    // Name is not good, go back to it.
+                    self.hasError(true);
+                    self.errorMsg(self.name() + " is not unique.  Choose a different name");
+                    self.name("");
+                    return true;
+                });
+            }
+            return false;
+        },
     };
+
+    // Define a model to control the navigation link.
+    // navLink = 0, will only show the jumbotron home page
+    // navLink = 1 will show the game board
+    WC.Model.UI = {
+        navLink: ko.observable(0),
+    };
+
     // Function to greet the server request to join
     WC.Controller.greetServer = function () {
         // Flip the flag to true
         connected = true;
         console.log("Client connected to server");
         console.dir(client);
-        client.name = "player" + Date.now();
+        //client.name = "player" + Date.now();
+        client.name = WC.Model.JoinPlayer.name();
 
         // Greet the server to join the server
         var newPayload = {
@@ -477,7 +529,15 @@ var main = function () {
     ko.applyBindings(WC.Model);
 
     // Initialize Socket IO Connection and events handling
-    WC.Controller.initIO();
+    //WC.Controller.initIO();
+
+
+    var initialize = function () {
+        // Set the navLink to home
+        WC.Model.UI.navLink(0);
+    };
+
+    initialize();
 
 
 };
