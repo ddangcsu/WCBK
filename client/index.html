@@ -18,6 +18,7 @@
     <!-- Project related styles-->
     <link rel="stylesheet" href="/css/lettersprite.css" type="text/css">
     <link rel="stylesheet" href="/css/numbersprite.css" type="text/css">
+    <link rel="stylesheet" href="/css/avatarsprite.css" type="text/css">
 
     <link rel="stylesheet" href="/css/style.css" type="text/css">
     <!-- <link rel="stylesheet" href="/css/wordCraft.css" type="text/css"> -->
@@ -27,7 +28,7 @@
   <body>
     <header>
       <!-- navigation bar -->
-      <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <nav class="navbar navbar-default navbar-fixed-top alert-info" role="navigation">
         <div class="container-fluid" id="customNavBar">
           <!-- Brand and toggle get grouped for better mobile display -->
           <div class="navbar-header">
@@ -77,24 +78,30 @@
       <div data-bind="if: UI.navLink() === 0">
         <div class="jumbotron" data-bind="if: UI.navLink() === 0">
           <div class="container">
-            <p class="h1">WordCraft - Multiplayer Word Game</p>
+            <p class="h1 text-center">WordCraft</p>
+            <p class="h1 text-center">How fast can you craft the word?</p>
           </div>
         </div>
       </div>
       <div data-bind="if: UI.navLink() === 1">
         <div class="container-fluid">
+          <div class="row" data-bind="with: GameRoom">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+              <div data-bind="foreach: players">
+                <div class="thumbnail">
+                  <span class="wc-avatar wc-avatar-1 text-center"></span>
+                  <div class="caption">
+                    <h5 data-bind="text: name, attr: {userId: id}, css: {self: self}"></h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="row">
-            <div class="col-sm-9 col-md-9 col-lg-7 col-lg-offset-1">
+            <div class="col-sm-9 col-md-9 col-lg-9">
               <div class="panel panel-info">
                 <div class="panel-heading">
-                  <h2 class="pannel-title">Game Board
-                    <span class="text-center pull-right" data-bind="if: GameTimer.display">
-                      <span data-bind="with: GameTimer">
-                        <span data-bind="css: tenth"></span>
-                        <span data-bind="css: digit"></span>
-                      </span>
-                    </span>
-                  </h2>
+                  <h3 class="pannel-title">Game Board</h3>
                 </div>
                 <div class="panel-body gameboard">
                   <div class="row">
@@ -110,11 +117,19 @@
                       <div class="timers text-center" data-bind="with: CountDown">
                         <!-- Place to put the server render Timer here -->
                         <!-- Below are example count down timer -->
-                        <h3> Get Ready !!! </h3>
+                        <h4> Get Ready !!! </h4>
                         <span data-bind="css: tenth"></span>
                         <span data-bind="css: digit"></span>
                       </div> <!-- End of Timers DIV -->
                     </div>
+                    <div data-bind="if: GameTimer.display">
+                      <h4> Remaining Time </h4>
+                      <span data-bind="with: GameTimer">
+                        <span data-bind="css: tenth"></span>
+                        <span data-bind="css: digit"></span>
+                      </span>
+                    </div>
+
                   </div>
                 </div>
                 <div class="panel-footer text-center" data-bind="if: GameTimer.display">
@@ -135,36 +150,19 @@
 
             <!-- Right column to hold chat and player list-->
             <div class="col-sm-3 col-md-3 col-lg-3">
-              <!-- Begin row to hold the game room -->
-              <div class="row">
-                <div class="panel panel-info" data-bind="with: GameRoom">
-                  <div class="panel-heading">
-                    <h4 class="pannel-title">Players</h4>
-                  </div>
-                  <div class="panel-body players-body">
-                    <!-- Player dynamically get added in here via Knockout Binding -->
-                    <ul id="playerList" data-bind="foreach: players">
-                      <li data-bind="text: name, attr: {userId: id}, css: {self: self}"></li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <!-- End row to hold the game room -->
               <!-- Begin row to hold the chatroom -->
-              <div class="row">
-                <div class="panel panel-info" data-bind="with: ChatRoom">
-                  <div class="panel-heading">
-                    <h4 class="pannel-title">Chat Room</h4>
-                  </div>
-                  <!-- KO dynamic bind for the chatroom -->
-                  <div class="panel-body chatroom-body" data-bind="foreach: messages">
-                    <p data-bind="text: message, css: type"></p>
-                  </div>
-                  <div class="panel-footer">
-                    <input type="text" class="form-control" data-bind="textInput: msgInput, event: {keypress: onEnterKey }">
-                    <button class="btn" data-bind="click: send">Send</button>
-                    <button class="btn" data-bind="click: clear">Clear</button>
-                  </div>
+              <div class="panel panel-info" data-bind="with: ChatRoom">
+                <div class="panel-heading">
+                  <h3 class="pannel-title">Chat Room</h3>
+                </div>
+                <!-- KO dynamic bind for the chatroom -->
+                <div class="panel-body chatroom-body" data-bind="foreach: messages">
+                  <p data-bind="text: message, css: type"></p>
+                </div>
+                <div class="panel-footer">
+                  <input type="text" class="form-control" data-bind="textInput: msgInput, event: {keypress: onEnterKey }">
+                  <button class="btn" data-bind="click: send">Send</button>
+                  <button class="btn" data-bind="click: clear">Clear</button>
                 </div>
               </div>
               <!-- End row that contain chatroom -->
@@ -185,17 +183,17 @@
                 <h3 class="modal-title text-center">About WordCraft</h3>
               </div>
               <div class="modal-body">
-                <p class="h4">
+                <p>
                   WordCraft is a realtime multiplayers word game where players will compete
                   with others to craft as many words as they can from the given letters
                   while racing against the clock.
                 </p>
-                <p class="h4">
+                <p>
                   The game is pretty simple.  Once everyone is ready to play, the game will
                   presents a list of 8 letters consist of 2 vowels and 6 consonants. Players
                   are allow to reuse any of the 8 letters while crafting a valid word.
                 </p>
-                <p class="h4">
+                <p>
                   May the one with the fastest fingers and a brain full of words win !!!
                 </p>
               </div>
@@ -217,13 +215,13 @@
               </div>
               <div class="modal-body">
                 <ul>
-                  <li class="h4">Every player type /ready in chat window to start game</li>
-                  <li class="h4">Players will be presents with 8 letters 2 vowels 6 consonants</li>
-                  <li class="h4">Craft as many words as possible before timer runs out</li>
-                  <li class="h4">All the word must draw only from the given letters</li>
-                  <li class="h4">Duplicate word will not count and will not be added to the list</li>
-                  <li class="h4">Letters can be reuse to craft the word</li>
-                  <li class="h4">Profits !!!</li>
+                  <li>Every player type /ready in chat window to start game</li>
+                  <li>Players will be presents with 8 letters 2 vowels 6 consonants</li>
+                  <li>Craft as many words as possible before timer runs out</li>
+                  <li>All the word must draw only from the given letters</li>
+                  <li>Duplicate word will not count and will not be added to the list</li>
+                  <li>Letters can be reuse to craft the word</li>
+                  <li>Profits !!!</li>
                 </ul>
               </div>
               <div class="modal-footer">
@@ -244,16 +242,12 @@
               </div>
               <div class="modal-body">
                 <div class="form-group">
-                  <label for="gameId">Enter your game name:
-                    <span class="error" data-bind="if: hasError">
-                      <span data-bind="text: errorMsg"></span>
-                    </span>
-                  </label>
-                  <input type="text" class="form-control" id="gameId" placeholder="Your Game Name"
-                    data-bind="textInput: name">
+                  <label for="inputName">Enter your game name:</label>
+                  <input type="text" class="form-control" id="inputName" placeholder="Your Game Name"
+                    data-bind="textInput: name, event: {keypress: onEnterKey}">
                 </div>
-                <div class="form-group">
-                  <span data-bind="text: name"></span>
+                <div class="form-group error" data-bind="if: hasError">
+                  <span data-bind="text: errorMsg"></span>
                 </div>
                 <div class="form-group">
                   <button class="btn btn-info" data-bind="click: join">
@@ -267,7 +261,7 @@
 
         <!-- Modal to show game in progress -->
         <div id="inProgressModal" class="modal fade" role="dialog">
-          <div class="modal-dialog" data-bind="with: JoinPlayer">
+          <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
               <div class="modal-header alert-warning">
@@ -275,7 +269,7 @@
                 <h4 class="modal-title">Game in Progress</h4>
               </div>
               <div class="modal-body">
-                <p class="h4">
+                <p>
                   We are sorry but the game is currently in progress.
                   Please come back later.
                 </p>
@@ -291,7 +285,6 @@
 
     <!-- footer -->
     <footer>
-     <!-- <hr />-->
       <div class="container">
         <p class="text-right">Copyright &copy; CPSC473 GameTeam 2016</p>
       </div>

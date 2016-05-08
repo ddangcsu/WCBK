@@ -1,0 +1,40 @@
+/* Image sprite for the avatar retrieved from
+http://findicons.com/files/icons/1072/preview/face_avatars_full_2.png
+Then created it as a single sprite manually
+*/
+
+/* Wordcraft Avatar sprite 40x40 thumbnail */
+.wc-avatar {
+    width: 40px;
+    height: 40px;
+    background-image:url("/assets/avatarSprite_40.png");
+    display:inline-block;
+}
+
+.wc-avatar-1 { background-position:       0 0 }
+.wc-avatar-2 { background-position:     -40 0 }
+.wc-avatar-3 { background-position:     -80 0 }
+.wc-avatar-4 { background-position:    -120 0 }
+.wc-avatar-5 { background-position:    -160 0 }
+.wc-avatar-6 { background-position:    -200 0 }
+.wc-avatar-7 { background-position:    -240 0 }
+.wc-avatar-8 { background-position:    -280 0 }
+.wc-avatar-9 { background-position:    -320 0 }
+.wc-avatar-10 { background-position:   -360 0 }
+.wc-avatar-11 { background-position:   -400 0 }
+.wc-avatar-12 { background-position:   -440 0 }
+.wc-avatar-13 { background-position:   -480 0 }
+.wc-avatar-14 { background-position:   -520 0 }
+.wc-avatar-15 { background-position:   -560 0 }
+.wc-avatar-16 { background-position:   -600 0 }
+.wc-avatar-17 { background-position:   -640 0 }
+.wc-avatar-18 { background-position:   -680 0 }
+.wc-avatar-19 { background-position:   -720 0 }
+.wc-avatar-20 { background-position:   -760 0 }
+.wc-avatar-21 { background-position:   -800 0 }
+.wc-avatar-22 { background-position:   -840 0 }
+.wc-avatar-23 { background-position:   -880 0 }
+.wc-avatar-24 { background-position:   -920 0 }
+.wc-avatar-25 { background-position:   -960 0 }
+.wc-avatar-26 { background-position:  -1000 0 }
+.wc-avatar-27 { background-position:  -1040 0 }
